@@ -120,6 +120,12 @@ class CounterAppState extends State<CounterApp> {
     print('LAP saved: ${laps.first}');
   }
 
+  void deleteLaps() {
+    setState(() {
+      laps.clear();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     //gombok formazasa
@@ -247,15 +253,23 @@ class CounterAppState extends State<CounterApp> {
                   padding: const EdgeInsets.symmetric(horizontal: 20.0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
-                    children: const [
+                    children: [
                       Text(
                         'Laps:',
                         style: TextStyle(
-                          fontSize: 18,
+                          fontSize: 20,
                           color: Colors.black87,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
+
+                      if (laps.isNotEmpty) //torles gomb
+                        IconButton(
+                          icon: const Icon(Icons.delete_sweep, color: Colors.black),
+                          onPressed: deleteLaps,
+                          tooltip: 'Clear Records',
+                        ),
+
                     ],
                   ),
                 ),
