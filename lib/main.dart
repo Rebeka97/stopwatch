@@ -21,6 +21,10 @@ class CounterAppState extends State<CounterApp> {
   bool isRunning = false; //logikai valtozo a mar futo szamlalomhoz
   bool highlightChange = false; //percvaltasnak szinvaltas
 
+  List<String> laps = []; //koridok tarolasara szolgalo lista
+
+  //TASK: IDE KELL AZ IDO FORMAZASAHOZ VALAMI METODUSFELE, AMIT KIIRASKOR MEGHIVOK, CSAK NEM TUDOM HOGY KELL!!!!!!!!!!!!!!!!!!!!!!!!
+
   /*void _increment() { //valtozo novelese
     setState(() {
       _counter++;
@@ -134,7 +138,8 @@ class CounterAppState extends State<CounterApp> {
       debugShowCheckedModeBanner: false,
 
       home: Scaffold(
-        appBar: AppBar(title: const Text('Task 1 - Stopwatch')),
+        //appBar: AppBar(title: const Text('Task 1 - Stopwatch')),
+        appBar: AppBar(title: const Text('Stopwatch')),
         body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center, //kozepre igazit
@@ -197,9 +202,14 @@ class CounterAppState extends State<CounterApp> {
                   ElevatedButton(
                     onPressed: lap,
                     style: buttonStyle.copyWith(
-                      backgroundColor: MaterialStateProperty.all(
-                        Colors.lightBlue.shade700,
+                      shape: MaterialStateProperty.all(const CircleBorder()),
+                      padding: MaterialStateProperty.all(
+                        const EdgeInsets.all(25),
                       ),
+                      backgroundColor: MaterialStateProperty.all(
+                        Colors.lightGreen.shade400,
+                      ),
+                      foregroundColor: MaterialStateProperty.all(Colors.white),
                     ),
                     child: const Text('LAP'),
                   ),
