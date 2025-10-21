@@ -146,6 +146,8 @@ class CounterAppState extends State<CounterApp> {
       color: displayColor,
     );
 
+    final TextStyle cardTextStyle = displayStyle.copyWith(fontSize: 40);
+
     return MaterialApp(
       debugShowCheckedModeBanner: false,
 
@@ -176,12 +178,35 @@ class CounterAppState extends State<CounterApp> {
               child: Column(
                 children: <Widget>[
                   Padding(
-                    padding: const EdgeInsets.only(top: 200.0),
+                    padding: const EdgeInsets.only(top: 130.0),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       //kozepre igazitja egy sorba a szamlalokat
                       children: <Widget>[
-                        Text(formattedTime, style: displayStyle),
+                        //Text(formattedTime, style: displayStyle),
+                        TimeCard(
+                          //perc kartyaja
+                          timeValue: minutes.toString().padLeft(2, '0'),
+                          label: 'MIN',
+                          displayStyle: cardTextStyle,
+                          highlightChange: highlightChange,
+                        ),
+
+                        TimeCard(
+                          //masodperc kartyaja
+                          timeValue: counter.toString().padLeft(2, '0'),
+                          label: 'SEC',
+                          displayStyle: cardTextStyle,
+                          highlightChange: highlightChange,
+                        ),
+
+                        TimeCard(
+                          //milisec kartyaja
+                          timeValue: milisec.toString().padLeft(2, '0'),
+                          label: 'MSEC',
+                          displayStyle: cardTextStyle,
+                          highlightChange: highlightChange,
+                        ),
                       ],
                     ),
                   ),
@@ -378,6 +403,71 @@ class CounterAppState extends State<CounterApp> {
             ),
           ),
         ),
+      ),
+    );
+  }
+}
+
+//Uj widget elhelyezese
+class TimeCard extends StatelessWidget {
+  final String timeValue;
+  final String label;
+  final TextStyle displayStyle;
+  final bool highlightChange;
+
+  const TimeCard({
+    super.key,
+    required this.timeValue,
+    required this.label,
+    required this.displayStyle,
+    required this.highlightChange,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final Color cardColor = const Color(0xFFF8F5F5);
+
+    final Color highlightColor = highlightChange
+        ? Colors.green
+        : Colors.black87;
+
+    return Container(
+      width: 90,
+
+      decoration: BoxDecoration(
+        color: cardColor,
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(color: Colors.black.withOpacity(0.05), width: 1),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1),
+            spreadRadius: 1,
+            blurRadius: 3,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      padding: const EdgeInsets.all(8),
+      margin: const EdgeInsets.symmetric(horizontal: 7),
+      // Kis helyet hagyunk a kártyák között
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            timeValue,
+
+            style: displayStyle.copyWith(color: highlightColor, fontSize: 50),
+          ),
+          const SizedBox(height: 2),
+          Text(
+            label,
+            style: TextStyle(
+              fontSize: 12,
+              fontWeight: FontWeight.w600,
+              color: highlightColor,
+            ),
+          ),
+        ],
       ),
     );
   }
