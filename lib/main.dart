@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:async'; // enélkül nem megy a TIMER
 
 void main() { runApp(const CounterApp()); }
 
@@ -11,16 +12,26 @@ class CounterApp extends StatefulWidget {
 
 class _CounterAppState extends State<CounterApp> {
   int _counter = 0;
+  late Timer _timer;
 
-  void _increment() { //valtozo novelese
+  /*void _increment() { //valtozo novelese
     setState(() {
       _counter++;
     });
+  }*/
+
+  void _increment() { //valtozo folyamatos novekedese
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) { //masodpercenkent no
+    setState(() {
+      _counter++;
+    });
+    });
   }
+
 
   void _pause() { //valtozo novelesenek megallitasa
     setState(() {
-      _counter++;
+      _timer.cancel();
     });
   }
 
