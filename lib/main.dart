@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'dart:async'; // enélkül nem megy a TIMER
 
-void main() { runApp(const CounterApp()); }
+void main() {
+  runApp(const CounterApp());
+}
 
 class CounterApp extends StatefulWidget {
   const CounterApp({super.key});
@@ -23,45 +25,49 @@ class _CounterAppState extends State<CounterApp> {
     });
   }*/
 
-  void _increment() { //valtozo folyamatos novekedese
+  void _increment() {
+    //valtozo folyamatos novekedese
     if (_isRunning) return; //fontos!!!!! Ne induljon el tobbszor!!!
     _isRunning = true;
 
-    _timer = Timer.periodic(const Duration(seconds: 1), (timer) { //masodpercenkent no
-    setState(() {
-      _counter++;
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      //masodpercenkent no
+      setState(() {
+        _counter++;
 
-      if (_counter == 60) { // 60 masodpercenkent noveli a percet es nullaza a mp-t
-        _counter = 0;
-        _minutes++;
-      }
-    });
+        if (_counter == 60) {
+          // 60 masodpercenkent noveli a percet es nullaza a mp-t
+          _counter = 0;
+          _minutes++;
+        }
+      });
     });
   }
 
-  void _pause() { //valtozo novelesenek megallitasa
+  void _pause() {
+    //valtozo novelesenek megallitasa
     setState(() {
       _timer.cancel();
+      _isRunning = false;
     });
   }
 
-  void _reset() { //visszaallitas 0-ra a masodpercet es percet is
+  void _reset() {
+    //visszaallitas 0-ra a masodpercet es percet is
 
     setState(() {
       _counter = 0;
       _minutes = 0;
       _timer.cancel(); //ne induljon ujra
+      _isRunning = false;
     });
   }
 
   @override
   Widget build(BuildContext context) {
-
     //gombok formazasa
     final ButtonStyle buttonStyle = ElevatedButton.styleFrom(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(5),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
       textStyle: const TextStyle(fontSize: 18),
     );
@@ -75,48 +81,54 @@ class _CounterAppState extends State<CounterApp> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center, //kozepre igazit
             children: <Widget>[
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                //kozepre igazitja egy sorba a szamlalokat
+                children: [
+                  Text(
+                    '$_minutes : ', //a perc valtozom meghivasa
+                    style: const TextStyle(
+                      fontSize: 60,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
 
-              Row(  mainAxisAlignment: MainAxisAlignment.center, //kozepre igazitja egy sorba a szamlalokat
-                  children: [
-
-              Text(
-                '$_minutes : ', //a perc valtozom meghivasa
-                style: const TextStyle(
-                    fontSize: 60, fontWeight: FontWeight.bold),
+                  Text(
+                    '$_counter', //a masodperc valtozom meghivasa
+                    style: const TextStyle(
+                      fontSize: 60,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
               ),
 
-              Text(
-                '$_counter', //a masodperc valtozom meghivasa
-                style: const TextStyle(
-                    fontSize: 60, fontWeight: FontWeight.bold),
-              ),
-                  ],
-        ),
+              const SizedBox(height: 30),
 
-          const SizedBox(height:30),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                //kozepre igazitja egy sorba a gombokat
+                children: [
+                  //gombok
+                  ElevatedButton(
+                    onPressed: _increment,
+                    style: buttonStyle,
+                    child: const Text('START'),
+                  ),
 
-          Row(  mainAxisAlignment: MainAxisAlignment.center, //kozepre igazitja egy sorba a gombokat
-            children: [
-//gombok
-              ElevatedButton(
-                onPressed: _increment,
-                style: buttonStyle,
-                child: const Text('START'),
-              ),
+                  ElevatedButton(
+                    onPressed: _pause,
+                    style: buttonStyle,
+                    child: const Text('PAUSE'),
+                  ),
 
-              ElevatedButton(
-                onPressed: _pause,
-                style: buttonStyle,
-                child: const Text('PAUSE'),
+                  ElevatedButton(
+                    onPressed: _reset,
+                    style: buttonStyle,
+                    child: const Text('RESET'),
+                  ),
+                ],
               ),
-
-              ElevatedButton(
-                onPressed: _reset,
-                style: buttonStyle,
-                child: const Text('RESET'),
-              ),
-            ],
-          ),
             ],
           ),
         ),
