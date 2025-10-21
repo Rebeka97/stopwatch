@@ -34,16 +34,17 @@ class _CounterAppState extends State<CounterApp> {
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       //masodpercenkent no
       setState(() {
-        if (_counter == 1) {
+        if (_highlightChange) {
           _highlightChange = false;
         }
+
         _counter++;
 
         if (_counter == 60) {
-          // 60 masodpercenkent noveli a percet es nullaza a mp-t
+          //60 masodpercenkent noveli a percet es nullaza a mp-t
           _counter = 0;
           _minutes++;
-          _highlightChange = true;
+          _highlightChange = true; //percvaltas
         }
       });
     });
