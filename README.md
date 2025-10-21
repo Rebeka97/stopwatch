@@ -1,6 +1,6 @@
 # stopwatch
 
-A new Flutter project.
+This new project is a Flutter-based stopwatch application designed to provide accurate time tracking with lap functionality and a clean, modern user interface.
 
 ## Getting Started
 
