@@ -94,7 +94,6 @@ class CounterAppState extends State<CounterApp> {
 
   void reset() {
     //visszaallitas 0-ra a masodpercet es percet is
-
     setState(() {
       milisec = 0;
       counter = 0;
@@ -103,6 +102,12 @@ class CounterAppState extends State<CounterApp> {
       isRunning = false;
       highlightChange = false;
     });
+  }
+
+  void lap() {
+    if (!isRunning) return;
+
+    print('LAP saved:'); //TASK: ITT IRJUK MAJD KI A ROGZITETT KOROK IDEJET!
   }
 
   @override
@@ -139,24 +144,15 @@ class CounterAppState extends State<CounterApp> {
                 //kozepre igazitja egy sorba a szamlalokat
                 children: <Widget>[
                   //a perc valtozom
-                  Text(
-                    minutes.toString().padLeft(2, '0'),
-                    style: displayStyle,
-                  ),
+                  Text(minutes.toString().padLeft(2, '0'), style: displayStyle),
                   //00:00:00 formatum
                   Text(' : ', style: displayStyle),
                   //a masodperc valtozom
-                  Text(
-                    counter.toString().padLeft(2, '0'),
-                    style: displayStyle,
-                  ),
+                  Text(counter.toString().padLeft(2, '0'), style: displayStyle),
                   //00:00:00 formatum
                   Text(' : ', style: displayStyle),
                   //a milisec valtozom
-                  Text(
-                    milisec.toString().padLeft(2, '0'),
-                    style: displayStyle,
-                  ),
+                  Text(milisec.toString().padLeft(2, '0'), style: displayStyle),
                   //00:00:00 formatum
                 ],
               ),
@@ -188,6 +184,24 @@ class CounterAppState extends State<CounterApp> {
                     onPressed: reset,
                     style: buttonStyle,
                     child: const Text('RESET'),
+                  ),
+                ],
+              ),
+
+              const SizedBox(height: 30),
+
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                //kozepre igazitja egy sorba a gombokat
+                children: [
+                  ElevatedButton(
+                    onPressed: lap,
+                    style: buttonStyle.copyWith(
+                      backgroundColor: MaterialStateProperty.all(
+                        Colors.lightBlue.shade700,
+                      ),
+                    ),
+                    child: const Text('LAP'),
                   ),
                 ],
               ),
