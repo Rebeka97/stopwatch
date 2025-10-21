@@ -11,7 +11,8 @@ class CounterApp extends StatefulWidget {
 }
 
 class _CounterAppState extends State<CounterApp> {
-  int _counter = 0;
+  int _counter = 0; //masodperc szamlalo
+  int _minutes = 0; // perc szamlalp (bovitheto oraval, nappal stb...)
   late Timer _timer;
 
   /*void _increment() { //valtozo novelese
@@ -24,6 +25,11 @@ class _CounterAppState extends State<CounterApp> {
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) { //masodpercenkent no
     setState(() {
       _counter++;
+
+      if (_counter == 60) { // 60 masodpercenkent noveli a percet es nullaza a mp-t
+        _counter = 0;
+        _minutes++;
+      }
     });
     });
   }
@@ -35,9 +41,10 @@ class _CounterAppState extends State<CounterApp> {
     });
   }
 
-  void _reset() { //visszaallitas 0-ra
+  void _reset() { //visszaallitas 0-ra a masodpercet es percet is
     setState(() {
       _counter = 0;
+      _minutes = 0;
     });
   }
 
@@ -53,8 +60,15 @@ class _CounterAppState extends State<CounterApp> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center, //kozepre igazit
             children: <Widget>[
+
               Text(
-                '$_counter', //a valtozom meghivasa
+                '$_minutes :', //a perc valtozom meghivasa
+                style: const TextStyle(
+                    fontSize: 60, fontWeight: FontWeight.bold),
+              ),
+
+              Text(
+                '$_counter', //a masodperc valtozom meghivasa
                 style: const TextStyle(
                     fontSize: 60, fontWeight: FontWeight.bold),
               ),
