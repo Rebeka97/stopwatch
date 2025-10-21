@@ -254,14 +254,15 @@ class CounterAppState extends State<CounterApp> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                        'Laps:',
-                        style: TextStyle(
-                          fontSize: 20,
-                          color: Colors.black87,
-                          fontWeight: FontWeight.bold,
+                      if (laps.isNotEmpty) //rekord rogziteskor jelenjen meg
+                        const Text(
+                          'Laps:',
+                          style: TextStyle(
+                            fontSize: 20,
+                            color: Colors.black87,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
-                      ),
 
                       if (laps.isNotEmpty) //torles gomb
                         IconButton(
@@ -275,8 +276,7 @@ class CounterAppState extends State<CounterApp> {
                                   Set<MaterialState> states,
                                 ) {
                                   if (states.contains(MaterialState.hovered)) {
-                                    return Colors
-                                        .red;
+                                    return Colors.red;
                                   }
                                   return Colors.black;
                                 }),
