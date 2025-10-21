@@ -23,7 +23,8 @@ class CounterAppState extends State<CounterApp> {
 
   List<String> laps = []; //koridok tarolasara szolgalo lista
 
-  //TASK: IDE KELL AZ IDO FORMAZASAHOZ VALAMI METODUSFELE, AMIT KIIRASKOR MEGHIVOK, CSAK NEM TUDOM HOGY KELL!!!!!!!!!!!!!!!!!!!!!!!!
+  String get formattedTime => //listaa elemeinek megfelelo kijelzese 00:00:00
+      '${minutes.toString().padLeft(2, '0')} : ${counter.toString().padLeft(2, '0')} : ${milisec.toString().padLeft(2, '0')}';
 
   /*void _increment() { //valtozo novelese
     setState(() {
@@ -111,7 +112,12 @@ class CounterAppState extends State<CounterApp> {
   void lap() {
     if (!isRunning) return;
 
-    print('LAP saved:'); //TASK: ITT IRJUK MAJD KI A ROGZITETT KOROK IDEJET!
+    setState(() {
+      //mindig az uj adat keruljon elore!
+      laps.insert(0, formattedTime);
+    });
+
+    print('LAP saved: ${laps.first}');
   }
 
   @override
@@ -140,83 +146,143 @@ class CounterAppState extends State<CounterApp> {
       home: Scaffold(
         //appBar: AppBar(title: const Text('Task 1 - Stopwatch')),
         appBar: AppBar(title: const Text('Stopwatch')),
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center, //kozepre igazit
-            children: <Widget>[
-              Row(
+
+        body: Column(
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.only(top: 50.0),
+              child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 //kozepre igazitja egy sorba a szamlalokat
-                children: <Widget>[
-                  //a perc valtozom
-                  Text(minutes.toString().padLeft(2, '0'), style: displayStyle),
-                  //00:00:00 formatum
-                  Text(' : ', style: displayStyle),
-                  //a masodperc valtozom
-                  Text(counter.toString().padLeft(2, '0'), style: displayStyle),
-                  //00:00:00 formatum
-                  Text(' : ', style: displayStyle),
-                  //a milisec valtozom
-                  Text(milisec.toString().padLeft(2, '0'), style: displayStyle),
-                  //00:00:00 formatum
-                ],
+                children: <Widget>[Text(formattedTime, style: displayStyle)],
               ),
+            ),
 
-              const SizedBox(height: 30),
+            const SizedBox(height: 50),
 
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                //kozepre igazitja egy sorba a gombokat
-                children: [
-                  //gombok
-                  ElevatedButton(
-                    onPressed: increment,
-                    style: buttonStyle,
-                    child: const Text('START'),
-                  ),
+            /*Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              //kozepre igazitja egy sorba a szamlalokat
+              children: <Widget>[
+                //a perc valtozom
+                Text(minutes.toString().padLeft(2, '0'), style: displayStyle),
+                //00:00:00 formatum
+                Text(' : ', style: displayStyle),
+                //a masodperc valtozom
+                Text(counter.toString().padLeft(2, '0'), style: displayStyle),
+                //00:00:00 formatum
+                Text(' : ', style: displayStyle),
+                //a milisec valtozom
+                Text(milisec.toString().padLeft(2, '0'), style: displayStyle),
+                //00:00:00 formatum
+              ],
+            ),
 
-                  const SizedBox(width: 15),
+            const SizedBox(height: 30),*/
 
-                  ElevatedButton(
-                    onPressed: pause,
-                    style: buttonStyle,
-                    child: const Text('PAUSE'),
-                  ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              //kozepre igazitja egy sorba a gombokat
+              children: [
+                //gombok
+                ElevatedButton(
+                  onPressed: increment,
+                  style: buttonStyle,
+                  child: const Text('START'),
+                ),
 
-                  const SizedBox(width: 15),
+                const SizedBox(width: 15),
 
-                  ElevatedButton(
-                    onPressed: reset,
-                    style: buttonStyle,
-                    child: const Text('RESET'),
-                  ),
-                ],
-              ),
+                ElevatedButton(
+                  onPressed: pause,
+                  style: buttonStyle,
+                  child: const Text('PAUSE'),
+                ),
 
-              const SizedBox(height: 30),
+                const SizedBox(width: 15),
 
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                //kozepre igazitja egy sorba a gombokat
-                children: [
-                  ElevatedButton(
-                    onPressed: lap,
-                    style: buttonStyle.copyWith(
-                      shape: MaterialStateProperty.all(const CircleBorder()),
-                      padding: MaterialStateProperty.all(
-                        const EdgeInsets.all(25),
-                      ),
-                      backgroundColor: MaterialStateProperty.all(
-                        Colors.lightGreen.shade400,
-                      ),
-                      foregroundColor: MaterialStateProperty.all(Colors.white),
+                ElevatedButton(
+                  onPressed: reset,
+                  style: buttonStyle,
+                  child: const Text('RESET'),
+                ),
+              ],
+            ),
+
+            const SizedBox(height: 30),
+
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              //kozepre igazitja egy sorba a gombokat
+              children: [
+                ElevatedButton(
+                  onPressed: lap,
+                  style: buttonStyle.copyWith(
+                    shape: MaterialStateProperty.all(const CircleBorder()),
+                    padding: MaterialStateProperty.all(
+                      const EdgeInsets.all(25),
                     ),
-                    child: const Text('LAP'),
+                    backgroundColor: MaterialStateProperty.all(
+                      Colors.lightGreen.shade400,
+                    ),
+                    foregroundColor: MaterialStateProperty.all(Colors.white),
                   ),
-                ],
+                  child: const Text('LAP'),
+                ),
+              ],
+            ),
+
+            const SizedBox(height: 30),
+
+            //Korido listajat kijelzem
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                child: laps.isEmpty
+                    ? const Text(
+                        'Laps:',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(color: Colors.grey, fontSize: 16),
+                      )
+                    : ListView.builder(
+                        itemCount: laps.length,
+                        itemBuilder: (context, index) {
+                          final lapNumber = laps.length - index;
+                          final lapTime = laps[index];
+
+                          final isLatestLap = index == 0;
+                          final itemColor = isLatestLap
+                              ? Colors.lightGreen.shade400
+                              : Colors.black;
+
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 8.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  'Lap $lapNumber:',
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                    color: itemColor,
+                                  ),
+                                ),
+                                Text(
+                                  lapTime,
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    color: itemColor,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          );
+                        },
+                      ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
