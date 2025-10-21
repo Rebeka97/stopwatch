@@ -48,7 +48,7 @@ class _CounterAppState extends State<CounterApp> {
           _highlightChange = true; //percvaltas
         }*/
 
-    _timer = Timer.periodic(const Duration(milliseconds: 100), (timer) {
+    _timer = Timer.periodic(const Duration(milliseconds: 10), (timer) {
       //milisec timer beallitasa, 1000 a valto, de progban centisec kell valamierrt
       setState(() {
         // Kiemelés kikapcsolása, ha aktív volt (csak 1 másodpercig tart)
@@ -58,7 +58,7 @@ class _CounterAppState extends State<CounterApp> {
 
         _milisec++; // Növeljük a miliszekundum (centiszekundum) számlálót
 
-        if (_milisec == 10) {
+        if (_milisec == 100) {
           _milisec = 0;
           _counter++;
 
@@ -66,10 +66,13 @@ class _CounterAppState extends State<CounterApp> {
             // 60 másodpercenként növeli a percet és nullázza a mp-t
             _counter = 0;
             _minutes++;
-            _highlightChange =
-                true; // Percváltás: Beállítjuk a kiemelést TRUE-ra
+            /*_highlightChange =
+                true; // Percváltás: Beállítjuk a kiemelést TRUE-ra*/
           }
         }
+        _highlightChange =
+            (_minutes > 0 &&
+            _minutes % 10 == 0); //10 percenkent zold a kijelzett ido
       });
     });
   }
@@ -136,15 +139,27 @@ class _CounterAppState extends State<CounterApp> {
                 //kozepre igazitja egy sorba a szamlalokat
                 children: <Widget>[
                   //a perc valtozom
-                  Text(_minutes.toString().padLeft(2, '0'), style: displayStyle), //00:00:00 formatum
+                  Text(
+                    _minutes.toString().padLeft(2, '0'),
+                    style: displayStyle,
+                  ),
+                  //00:00:00 formatum
                   Text(' : ', style: displayStyle),
                   //a masodperc valtozom
-                  Text(_counter.toString().padLeft(2, '0'), style: displayStyle), //00:00:00 formatum
+                  Text(
+                    _counter.toString().padLeft(2, '0'),
+                    style: displayStyle,
+                  ),
+                  //00:00:00 formatum
                   Text(' : ', style: displayStyle),
                   //a milisec valtozom
-                  Text((_milisec * 10).toString().padLeft(2, '0'), style: displayStyle), //00:00:00 formatum es a helyiertek miatt *10
-                    ],
+                  Text(
+                    _milisec.toString().padLeft(2, '0'),
+                    style: displayStyle,
                   ),
+                  //00:00:00 formatum
+                ],
+              ),
 
               const SizedBox(height: 30),
 
