@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'dart:async'; // enélkül nem megy a TIMER
+import 'dart:async'; //enelkul nem megy a TIMER
 
 void main() {
   runApp(const CounterApp());
@@ -18,6 +18,7 @@ class _CounterAppState extends State<CounterApp> {
   late Timer _timer;
 
   bool _isRunning = false; //logikai valtozo a mar futo szamlalomhoz
+  bool _highlightChange = false; //percvaltasnak szinvaltas
 
   /*void _increment() { //valtozo novelese
     setState(() {
@@ -33,22 +34,33 @@ class _CounterAppState extends State<CounterApp> {
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       //masodpercenkent no
       setState(() {
+        if (_counter == 1) {
+          _highlightChange = false;
+        }
         _counter++;
 
         if (_counter == 60) {
           // 60 masodpercenkent noveli a percet es nullaza a mp-t
           _counter = 0;
           _minutes++;
+          _highlightChange = true;
         }
       });
     });
   }
 
   void _pause() {
+    //TASK: NEM INDUL UJRA A SZAMLALAS!
     //valtozo novelesenek megallitasa
-    setState(() {
+    if (!_isRunning) return; //csak futasnal lehet leallitani
+
+    if (_timer.isActive) {
+      //amikor aktiv, akkor leall
       _timer.cancel();
-      _isRunning = false;
+    }
+
+    setState(() {
+      _isRunning = false; //ujra mukodik a start gomb
     });
   }
 
@@ -60,6 +72,7 @@ class _CounterAppState extends State<CounterApp> {
       _minutes = 0;
       _timer.cancel(); //ne induljon ujra
       _isRunning = false;
+      _highlightChange = false;
     });
   }
 
@@ -67,9 +80,20 @@ class _CounterAppState extends State<CounterApp> {
   Widget build(BuildContext context) {
     //gombok formazasa
     final ButtonStyle buttonStyle = ElevatedButton.styleFrom(
+      foregroundColor: Colors.green,
+
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
       textStyle: const TextStyle(fontSize: 18),
+    );
+
+    //kijelzo zoldre valtasa minden percben
+    final Color displayColor = _highlightChange ? Colors.green : Colors.black;
+
+    final TextStyle displayStyle = TextStyle(
+      fontSize: 50,
+      fontWeight: FontWeight.bold,
+      color: displayColor,
     );
 
     return MaterialApp(
@@ -84,22 +108,12 @@ class _CounterAppState extends State<CounterApp> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 //kozepre igazitja egy sorba a szamlalokat
-                children: [
-                  Text(
-                    '$_minutes : ', //a perc valtozom meghivasa
-                    style: const TextStyle(
-                      fontSize: 60,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-
-                  Text(
-                    '$_counter', //a masodperc valtozom meghivasa
-                    style: const TextStyle(
-                      fontSize: 60,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
+                children: <Widget>[
+                  Text(_minutes.toString(), style: displayStyle),
+                  //a perc valtozom
+                  Text(' : ', style: displayStyle),
+                  Text(_counter.toString(), style: displayStyle),
+                  //a masodperc valtozom
                 ],
               ),
 
@@ -116,11 +130,15 @@ class _CounterAppState extends State<CounterApp> {
                     child: const Text('START'),
                   ),
 
+                  const SizedBox(width: 15),
+
                   ElevatedButton(
                     onPressed: _pause,
                     style: buttonStyle,
                     child: const Text('PAUSE'),
                   ),
+
+                  const SizedBox(width: 15),
 
                   ElevatedButton(
                     onPressed: _reset,
