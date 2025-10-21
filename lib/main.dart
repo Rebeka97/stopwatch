@@ -164,8 +164,7 @@ class CounterAppState extends State<CounterApp> {
           //hatterszin
           decoration: const BoxDecoration(
             gradient: LinearGradient(
-              colors: [Color(0xFFC8E6C9), Color(0xFFFFFFFF)
-              ],
+              colors: [Color(0xFFC8E6C9), Color(0xFFFFFFFF)],
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
             ),
@@ -177,7 +176,7 @@ class CounterAppState extends State<CounterApp> {
               child: Column(
                 children: <Widget>[
                   Padding(
-                    padding: const EdgeInsets.only(top: 50.0),
+                    padding: const EdgeInsets.only(top: 200.0),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       //kozepre igazitja egy sorba a szamlalokat
@@ -187,7 +186,7 @@ class CounterAppState extends State<CounterApp> {
                     ),
                   ),
 
-                  const SizedBox(height: 50),
+                  const SizedBox(height: 20),
 
                   /*Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -325,7 +324,7 @@ class CounterAppState extends State<CounterApp> {
                     ),
                   ),
 
-                  const SizedBox(height: 10),
+                  const SizedBox(height: 5),
 
                   //Korido listajat kijelzem
                   Expanded(
@@ -334,6 +333,7 @@ class CounterAppState extends State<CounterApp> {
                       child: laps.isEmpty
                           ? Container()
                           : ListView.builder(
+                              padding: EdgeInsets.zero,
                               itemCount: laps.length,
                               itemBuilder: (context, index) {
                                 final lapNumber = laps.length - index;
@@ -346,7 +346,7 @@ class CounterAppState extends State<CounterApp> {
 
                                 return Padding(
                                   padding: const EdgeInsets.symmetric(
-                                    vertical: 8.0,
+                                    vertical: 5.0,
                                   ),
                                   child: Row(
                                     mainAxisAlignment:
