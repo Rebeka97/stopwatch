@@ -13,6 +13,7 @@ class CounterApp extends StatefulWidget {
 }
 
 class _CounterAppState extends State<CounterApp> {
+  int _milisec = 0; //milisec szamlalo
   int _counter = 0; //masodperc szamlalo
   int _minutes = 0; //perc szamlalp (bovitheto oraval, nappal stb...)
   late Timer _timer;
@@ -69,6 +70,7 @@ class _CounterAppState extends State<CounterApp> {
     //visszaallitas 0-ra a masodpercet es percet is
 
     setState(() {
+      _milisec = 0;
       _counter = 0;
       _minutes = 0;
       _timer.cancel(); //ne induljon ujra
@@ -110,11 +112,14 @@ class _CounterAppState extends State<CounterApp> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 //kozepre igazitja egy sorba a szamlalokat
                 children: <Widget>[
-                  Text(_minutes.toString(), style: displayStyle),
                   //a perc valtozom
+                  Text(_minutes.toString(), style: displayStyle),
                   Text(' : ', style: displayStyle),
-                  Text(_counter.toString(), style: displayStyle),
                   //a masodperc valtozom
+                  Text(_counter.toString(), style: displayStyle),
+                  Text(' : ', style: displayStyle),
+                  //a milisec valtozom
+                  Text(_milisec.toString(), style: displayStyle),
                 ],
               ),
 
