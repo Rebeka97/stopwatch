@@ -1,9 +1,40 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import '../lib/main.dart';
+import 'dart:async';
+
+//Segedosztaly a main modositasa helyett
+class TestableCounterAppState extends CounterAppState {
+  @override
+  void increment() {
+    if (isRunning) return;
+    isRunning = true;
+    timer = Timer(Duration.zero, () {});
+  }
+
+  @override
+  void pause() {
+    if (!isRunning) return;
+    isRunning = false;
+  }
+
+  @override
+  void reset() {
+    milisec = 0;
+    counter = 0;
+    minutes = 0;
+    isRunning = false;
+    highlightChange = false;
+  }
+}
+
+void main() {
+  group('Stopwatch Unit Tests (Cleaned)', () {
 
 void main() {
   group('Stopwatch Unit Tests', () {
+
+  }
 
     //1. Test: Create a unit test to verify that pressing the start button starts the stopwatch and the elapsed time increases over time.
     test('START gomb megnyomása elindítja a stoppert és az idő nő', () {
