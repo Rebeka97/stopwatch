@@ -285,7 +285,7 @@ class CounterAppState extends State<CounterApp> {
                           IconButton(
                             icon: const Icon(Icons.delete_sweep),
                             onPressed: deleteLaps,
-                            tooltip: 'Clear Records',
+                            tooltip: null,
                             style: ButtonStyle(
                               //piros hover
                               foregroundColor:
