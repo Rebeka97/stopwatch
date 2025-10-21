@@ -50,11 +50,22 @@ class _CounterAppState extends State<CounterApp> {
     setState(() {
       _counter = 0;
       _minutes = 0;
+      _timer.cancel(); //ne induljon ujra
     });
   }
 
   @override
   Widget build(BuildContext context) {
+
+    //gombok formazasa
+    final ButtonStyle buttonStyle = ElevatedButton.styleFrom(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(5),
+      ),
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+      textStyle: const TextStyle(fontSize: 18),
+    );
+
     return MaterialApp(
       debugShowCheckedModeBanner: false,
 
@@ -88,17 +99,20 @@ class _CounterAppState extends State<CounterApp> {
             children: [
 //gombok
               ElevatedButton(
-                onPressed: _increment, //
+                onPressed: _increment,
+                style: buttonStyle,
                 child: const Text('START'),
               ),
 
               ElevatedButton(
                 onPressed: _pause,
+                style: buttonStyle,
                 child: const Text('PAUSE'),
               ),
 
               ElevatedButton(
                 onPressed: _reset,
+                style: buttonStyle,
                 child: const Text('RESET'),
               ),
             ],
