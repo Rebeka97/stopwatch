@@ -12,8 +12,10 @@ class CounterApp extends StatefulWidget {
 
 class _CounterAppState extends State<CounterApp> {
   int _counter = 0; //masodperc szamlalo
-  int _minutes = 0; // perc szamlalp (bovitheto oraval, nappal stb...)
+  int _minutes = 0; //perc szamlalp (bovitheto oraval, nappal stb...)
   late Timer _timer;
+
+  bool _isRunning = false; //logikai valtozo a mar futo szamlalomhoz
 
   /*void _increment() { //valtozo novelese
     setState(() {
@@ -22,6 +24,9 @@ class _CounterAppState extends State<CounterApp> {
   }*/
 
   void _increment() { //valtozo folyamatos novekedese
+    if (_isRunning) return; //fontos!!!!! Ne induljon el tobbszor!!!
+    _isRunning = true;
+
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) { //masodpercenkent no
     setState(() {
       _counter++;
@@ -34,7 +39,6 @@ class _CounterAppState extends State<CounterApp> {
     });
   }
 
-
   void _pause() { //valtozo novelesenek megallitasa
     setState(() {
       _timer.cancel();
@@ -42,12 +46,12 @@ class _CounterAppState extends State<CounterApp> {
   }
 
   void _reset() { //visszaallitas 0-ra a masodpercet es percet is
+
     setState(() {
       _counter = 0;
       _minutes = 0;
     });
   }
-
 
   @override
   Widget build(BuildContext context) {
