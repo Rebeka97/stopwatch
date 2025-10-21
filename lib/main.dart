@@ -252,7 +252,7 @@ class CounterAppState extends State<CounterApp> {
                   //A lista elejen elhelyezkedo cim
                   padding: const EdgeInsets.symmetric(horizontal: 20.0),
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
                         'Laps:',
@@ -265,11 +265,38 @@ class CounterAppState extends State<CounterApp> {
 
                       if (laps.isNotEmpty) //torles gomb
                         IconButton(
-                          icon: const Icon(Icons.delete_sweep, color: Colors.black),
+                          icon: const Icon(Icons.delete_sweep),
                           onPressed: deleteLaps,
                           tooltip: 'Clear Records',
-                        ),
+                          style: ButtonStyle(
+                            //piros hover
+                            foregroundColor:
+                                MaterialStateProperty.resolveWith<Color>((
+                                  Set<MaterialState> states,
+                                ) {
+                                  if (states.contains(MaterialState.hovered)) {
+                                    return Colors
+                                        .red;
+                                  }
+                                  return Colors.black;
+                                }),
+                            //felesleges formazas eltuntetese
+                            splashFactory: NoSplash.splashFactory,
 
+                            overlayColor:
+                                MaterialStateProperty.resolveWith<Color>((
+                                  Set<MaterialState> states,
+                                ) {
+                                  if (states.contains(MaterialState.hovered)) {
+                                    return Colors.transparent;
+                                  }
+                                  if (states.contains(MaterialState.pressed)) {
+                                    return Colors.transparent;
+                                  }
+                                  return Colors.transparent;
+                                }),
+                          ),
+                        ),
                     ],
                   ),
                 ),
