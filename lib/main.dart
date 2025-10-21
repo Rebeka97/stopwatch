@@ -9,17 +9,17 @@ class CounterApp extends StatefulWidget {
   const CounterApp({super.key});
 
   @override
-  State<CounterApp> createState() => _CounterAppState();
+  State<CounterApp> createState() => CounterAppState();
 }
 
-class _CounterAppState extends State<CounterApp> {
-  int _milisec = 0; //milisec szamlalo
-  int _counter = 0; //masodperc szamlalo
-  int _minutes = 0; //perc szamlalp (bovitheto oraval, nappal stb...)
-  late Timer _timer;
+class CounterAppState extends State<CounterApp> {
+  int milisec = 0; //milisec szamlalo
+  int counter = 0; //masodperc szamlalo
+  int minutes = 0; //perc szamlalp (bovitheto oraval, nappal stb...)
+  late Timer timer;
 
-  bool _isRunning = false; //logikai valtozo a mar futo szamlalomhoz
-  bool _highlightChange = false; //percvaltasnak szinvaltas
+  bool isRunning = false; //logikai valtozo a mar futo szamlalomhoz
+  bool highlightChange = false; //percvaltasnak szinvaltas
 
   /*void _increment() { //valtozo novelese
     setState(() {
@@ -27,10 +27,10 @@ class _CounterAppState extends State<CounterApp> {
     });
   }*/
 
-  void _increment() {
+  void increment() {
     //valtozo folyamatos novekedese
-    if (_isRunning) return; //fontos!!!!! Ne induljon el tobbszor!!!
-    _isRunning = true;
+    if (isRunning) return; //fontos!!!!! Ne induljon el tobbszor!!!
+    isRunning = true;
 
     /*_timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       //masodpercenkent no
@@ -48,60 +48,60 @@ class _CounterAppState extends State<CounterApp> {
           _highlightChange = true; //percvaltas
         }*/
 
-    _timer = Timer.periodic(const Duration(milliseconds: 10), (timer) {
+    timer = Timer.periodic(const Duration(milliseconds: 10), (timer) {
       //milisec timer beallitasa, 1000 a valto, de progban centisec kell valamierrt
       setState(() {
         // Kiemelés kikapcsolása, ha aktív volt (csak 1 másodpercig tart)
-        if (_highlightChange) {
-          _highlightChange = false;
+        if (highlightChange) {
+          highlightChange = false;
         }
 
-        _milisec++; // Növeljük a miliszekundum (centiszekundum) számlálót
+        milisec++; // Növeljük a miliszekundum (centiszekundum) számlálót
 
-        if (_milisec == 100) {
-          _milisec = 0;
-          _counter++;
+        if (milisec == 100) {
+          milisec = 0;
+          counter++;
 
-          if (_counter == 60) {
+          if (counter == 60) {
             // 60 másodpercenként növeli a percet és nullázza a mp-t
-            _counter = 0;
-            _minutes++;
+            counter = 0;
+            minutes++;
             /*_highlightChange =
                 true; // Percváltás: Beállítjuk a kiemelést TRUE-ra*/
           }
         }
-        _highlightChange =
-            (_minutes > 0 &&
-            _minutes % 10 == 0); //10 percenkent zold a kijelzett ido
+        highlightChange =
+            (minutes > 0 &&
+            minutes % 10 == 0); //10 percenkent zold a kijelzett ido
       });
     });
   }
 
-  void _pause() {
+  void pause() {
     //TASK: NEM INDUL UJRA A SZAMLALAS!
     //valtozo novelesenek megallitasa
-    if (!_isRunning) return; //csak futasnal lehet leallitani
+    if (!isRunning) return; //csak futasnal lehet leallitani
 
-    if (_timer.isActive) {
+    if (timer.isActive) {
       //amikor aktiv, akkor leall
-      _timer.cancel();
+      timer.cancel();
     }
 
     setState(() {
-      _isRunning = false; //ujra mukodik a start gomb
+      isRunning = false; //ujra mukodik a start gomb
     });
   }
 
-  void _reset() {
+  void reset() {
     //visszaallitas 0-ra a masodpercet es percet is
 
     setState(() {
-      _milisec = 0;
-      _counter = 0;
-      _minutes = 0;
-      _timer.cancel(); //ne induljon ujra
-      _isRunning = false;
-      _highlightChange = false;
+      milisec = 0;
+      counter = 0;
+      minutes = 0;
+      timer.cancel(); //ne induljon ujra
+      isRunning = false;
+      highlightChange = false;
     });
   }
 
@@ -117,7 +117,7 @@ class _CounterAppState extends State<CounterApp> {
     );
 
     //kijelzo zoldre valtasa minden percben
-    final Color displayColor = _highlightChange ? Colors.green : Colors.black;
+    final Color displayColor = highlightChange ? Colors.green : Colors.black;
 
     final TextStyle displayStyle = TextStyle(
       fontSize: 50,
@@ -140,21 +140,21 @@ class _CounterAppState extends State<CounterApp> {
                 children: <Widget>[
                   //a perc valtozom
                   Text(
-                    _minutes.toString().padLeft(2, '0'),
+                    minutes.toString().padLeft(2, '0'),
                     style: displayStyle,
                   ),
                   //00:00:00 formatum
                   Text(' : ', style: displayStyle),
                   //a masodperc valtozom
                   Text(
-                    _counter.toString().padLeft(2, '0'),
+                    counter.toString().padLeft(2, '0'),
                     style: displayStyle,
                   ),
                   //00:00:00 formatum
                   Text(' : ', style: displayStyle),
                   //a milisec valtozom
                   Text(
-                    _milisec.toString().padLeft(2, '0'),
+                    milisec.toString().padLeft(2, '0'),
                     style: displayStyle,
                   ),
                   //00:00:00 formatum
@@ -169,7 +169,7 @@ class _CounterAppState extends State<CounterApp> {
                 children: [
                   //gombok
                   ElevatedButton(
-                    onPressed: _increment,
+                    onPressed: increment,
                     style: buttonStyle,
                     child: const Text('START'),
                   ),
@@ -177,7 +177,7 @@ class _CounterAppState extends State<CounterApp> {
                   const SizedBox(width: 15),
 
                   ElevatedButton(
-                    onPressed: _pause,
+                    onPressed: pause,
                     style: buttonStyle,
                     child: const Text('PAUSE'),
                   ),
@@ -185,7 +185,7 @@ class _CounterAppState extends State<CounterApp> {
                   const SizedBox(width: 15),
 
                   ElevatedButton(
-                    onPressed: _reset,
+                    onPressed: reset,
                     style: buttonStyle,
                     child: const Text('RESET'),
                   ),
