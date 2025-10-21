@@ -150,30 +150,46 @@ class CounterAppState extends State<CounterApp> {
       debugShowCheckedModeBanner: false,
 
       home: Scaffold(
+        extendBodyBehindAppBar: true,
+        backgroundColor: Colors.transparent,
+
         //appBar: AppBar(title: const Text('Task 1 - Stopwatch')),
-        appBar: AppBar(title: const Text('Stopwatch')),
+        appBar: AppBar(
+          title: const Text('Stopwatch'),
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+        ),
 
-        body: Center(
-          // Középre igazítja a ConstrainedBox-ot
-          child: ConstrainedBox(
-            // Korlátozza a tartalom maximális szélességét
-            constraints: const BoxConstraints(maxWidth: 326),
-            child: Column(
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.only(top: 50.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    //kozepre igazitja egy sorba a szamlalokat
-                    children: <Widget>[
-                      Text(formattedTime, style: displayStyle),
-                    ],
+        body: Container(
+          //hatterszin
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              colors: [Color(0xFFC8E6C9), Color(0xFFFFFFFF)
+              ],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+            ),
+          ),
+
+          child: Center(
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 326),
+              child: Column(
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.only(top: 50.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      //kozepre igazitja egy sorba a szamlalokat
+                      children: <Widget>[
+                        Text(formattedTime, style: displayStyle),
+                      ],
+                    ),
                   ),
-                ),
 
-                const SizedBox(height: 50),
+                  const SizedBox(height: 50),
 
-                /*Row(
+                  /*Row(
               mainAxisAlignment: MainAxisAlignment.center,
               //kozepre igazitja egy sorba a szamlalokat
               children: <Widget>[
@@ -192,164 +208,173 @@ class CounterAppState extends State<CounterApp> {
             ),
 
             const SizedBox(height: 30),*/
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  //kozepre igazitja egy sorba a gombokat
-                  children: [
-                    //gombok
-                    ElevatedButton(
-                      onPressed: increment,
-                      style: buttonStyle,
-                      child: const Text('START'),
-                    ),
-
-                    const SizedBox(width: 15),
-
-                    ElevatedButton(
-                      onPressed: pause,
-                      style: buttonStyle,
-                      child: const Text('PAUSE'),
-                    ),
-
-                    const SizedBox(width: 15),
-
-                    ElevatedButton(
-                      onPressed: reset,
-                      style: buttonStyle,
-                      child: const Text('RESET'),
-                    ),
-                  ],
-                ),
-
-                const SizedBox(height: 30),
-
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  //kozepre igazitja egy sorba a gombokat
-                  children: [
-                    ElevatedButton(
-                      onPressed: lap,
-                      style: buttonStyle.copyWith(
-                        shape: MaterialStateProperty.all(const CircleBorder()),
-                        padding: MaterialStateProperty.all(
-                          const EdgeInsets.all(25),
-                        ),
-                        backgroundColor: MaterialStateProperty.all(
-                          Colors.lightGreen.shade400,
-                        ),
-                        foregroundColor: MaterialStateProperty.all(
-                          Colors.white,
-                        ),
-                      ),
-                      child: const Text('LAP'),
-                    ),
-                  ],
-                ),
-
-                const SizedBox(height: 30),
-
-                Padding(
-                  //A lista elejen elhelyezkedo cim
-                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    //kozepre igazitja egy sorba a gombokat
                     children: [
-                      if (laps.isNotEmpty) //rekord rogziteskor jelenjen meg
-                        const Text(
-                          'Laps:',
-                          style: TextStyle(
-                            fontSize: 20,
-                            color: Colors.black87,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
+                      //gombok
+                      ElevatedButton(
+                        onPressed: increment,
+                        style: buttonStyle,
+                        child: const Text('START'),
+                      ),
 
-                      if (laps.isNotEmpty) //torles gomb
-                        IconButton(
-                          icon: const Icon(Icons.delete_sweep),
-                          onPressed: deleteLaps,
-                          tooltip: 'Clear Records',
-                          style: ButtonStyle(
-                            //piros hover
-                            foregroundColor:
-                                MaterialStateProperty.resolveWith<Color>((
-                                  Set<MaterialState> states,
-                                ) {
-                                  if (states.contains(MaterialState.hovered)) {
-                                    return Colors.red;
-                                  }
-                                  return Colors.black;
-                                }),
-                            //felesleges formazas eltuntetese
-                            splashFactory: NoSplash.splashFactory,
+                      const SizedBox(width: 15),
 
-                            overlayColor:
-                                MaterialStateProperty.resolveWith<Color>((
-                                  Set<MaterialState> states,
-                                ) {
-                                  if (states.contains(MaterialState.hovered)) {
-                                    return Colors.transparent;
-                                  }
-                                  if (states.contains(MaterialState.pressed)) {
-                                    return Colors.transparent;
-                                  }
-                                  return Colors.transparent;
-                                }),
-                          ),
-                        ),
+                      ElevatedButton(
+                        onPressed: pause,
+                        style: buttonStyle,
+                        child: const Text('PAUSE'),
+                      ),
+
+                      const SizedBox(width: 15),
+
+                      ElevatedButton(
+                        onPressed: reset,
+                        style: buttonStyle,
+                        child: const Text('RESET'),
+                      ),
                     ],
                   ),
-                ),
 
-                const SizedBox(height: 10),
+                  const SizedBox(height: 30),
 
-                //Korido listajat kijelzem
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                    child: laps.isEmpty
-                        ? Container()
-                        : ListView.builder(
-                            itemCount: laps.length,
-                            itemBuilder: (context, index) {
-                              final lapNumber = laps.length - index;
-                              final lapTime = laps[index];
-
-                              final isLatestLap = index == 0;
-                              final itemColor = isLatestLap
-                                  ? Colors.lightGreen.shade400
-                                  : Colors.black;
-
-                              return Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  vertical: 8.0,
-                                ),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      'Lap $lapNumber.:',
-                                      style: TextStyle(
-                                        fontSize: 18,
-                                        color: itemColor,
-                                      ),
-                                    ),
-                                    Text(
-                                      lapTime,
-                                      style: TextStyle(
-                                        fontSize: 18,
-                                        color: itemColor,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              );
-                            },
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    //kozepre igazitja egy sorba a gombokat
+                    children: [
+                      ElevatedButton(
+                        onPressed: lap,
+                        style: buttonStyle.copyWith(
+                          shape: MaterialStateProperty.all(
+                            const CircleBorder(),
                           ),
+                          padding: MaterialStateProperty.all(
+                            const EdgeInsets.all(25),
+                          ),
+                          backgroundColor: MaterialStateProperty.all(
+                            Colors.lightGreen.shade400,
+                          ),
+                          foregroundColor: MaterialStateProperty.all(
+                            Colors.white,
+                          ),
+                        ),
+                        child: const Text('LAP'),
+                      ),
+                    ],
                   ),
-                ),
-              ],
+
+                  const SizedBox(height: 30),
+
+                  Padding(
+                    //A lista elejen elhelyezkedo cim
+                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        if (laps.isNotEmpty) //rekord rogziteskor jelenjen meg
+                          const Text(
+                            'Laps:',
+                            style: TextStyle(
+                              fontSize: 20,
+                              color: Colors.black87,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+
+                        if (laps.isNotEmpty) //torles gomb
+                          IconButton(
+                            icon: const Icon(Icons.delete_sweep),
+                            onPressed: deleteLaps,
+                            tooltip: 'Clear Records',
+                            style: ButtonStyle(
+                              //piros hover
+                              foregroundColor:
+                                  MaterialStateProperty.resolveWith<Color>((
+                                    Set<MaterialState> states,
+                                  ) {
+                                    if (states.contains(
+                                      MaterialState.hovered,
+                                    )) {
+                                      return Colors.red;
+                                    }
+                                    return Colors.black;
+                                  }),
+                              //felesleges formazas eltuntetese
+                              splashFactory: NoSplash.splashFactory,
+
+                              overlayColor:
+                                  MaterialStateProperty.resolveWith<Color>((
+                                    Set<MaterialState> states,
+                                  ) {
+                                    if (states.contains(
+                                      MaterialState.hovered,
+                                    )) {
+                                      return Colors.transparent;
+                                    }
+                                    if (states.contains(
+                                      MaterialState.pressed,
+                                    )) {
+                                      return Colors.transparent;
+                                    }
+                                    return Colors.transparent;
+                                  }),
+                            ),
+                          ),
+                      ],
+                    ),
+                  ),
+
+                  const SizedBox(height: 10),
+
+                  //Korido listajat kijelzem
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                      child: laps.isEmpty
+                          ? Container()
+                          : ListView.builder(
+                              itemCount: laps.length,
+                              itemBuilder: (context, index) {
+                                final lapNumber = laps.length - index;
+                                final lapTime = laps[index];
+
+                                final isLatestLap = index == 0;
+                                final itemColor = isLatestLap
+                                    ? Colors.lightGreen.shade400
+                                    : Colors.black;
+
+                                return Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: 8.0,
+                                  ),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        'Lap $lapNumber.:',
+                                        style: TextStyle(
+                                          fontSize: 18,
+                                          color: itemColor,
+                                        ),
+                                      ),
+                                      Text(
+                                        lapTime,
+                                        style: TextStyle(
+                                          fontSize: 18,
+                                          color: itemColor,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              },
+                            ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
