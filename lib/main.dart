@@ -65,8 +65,11 @@ class _CounterAppState extends State<CounterApp> {
             mainAxisAlignment: MainAxisAlignment.center, //kozepre igazit
             children: <Widget>[
 
+              Row(  mainAxisAlignment: MainAxisAlignment.center, //kozepre igazitja egy sorba a szamlalokat
+                  children: [
+
               Text(
-                '$_minutes :', //a perc valtozom meghivasa
+                '$_minutes : ', //a perc valtozom meghivasa
                 style: const TextStyle(
                     fontSize: 60, fontWeight: FontWeight.bold),
               ),
@@ -76,8 +79,14 @@ class _CounterAppState extends State<CounterApp> {
                 style: const TextStyle(
                     fontSize: 60, fontWeight: FontWeight.bold),
               ),
+                  ],
+        ),
 
-              //gombok
+          const SizedBox(height:30),
+
+          Row(  mainAxisAlignment: MainAxisAlignment.center, //kozepre igazitja egy sorba a gombokat
+            children: [
+//gombok
               ElevatedButton(
                 onPressed: _increment, //
                 child: const Text('START'),
@@ -92,7 +101,8 @@ class _CounterAppState extends State<CounterApp> {
                 onPressed: _reset,
                 child: const Text('RESET'),
               ),
-
+            ],
+          ),
             ],
           ),
         ),
