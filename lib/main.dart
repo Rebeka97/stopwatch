@@ -234,16 +234,30 @@ class CounterAppState extends State<CounterApp> {
 
             const SizedBox(height: 30),
 
+            Padding( //A lista elejen elhelyezkedo cim
+              padding: const EdgeInsets.symmetric(horizontal: 20.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: const [
+                  Text(
+                    'Laps:',
+                    style: TextStyle(
+                      fontSize: 18,
+                      color: Colors.black87,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+            const SizedBox(height: 10),
+
             //Korido listajat kijelzem
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20.0),
                 child: laps.isEmpty
-                    ? const Text(
-                        'Laps:',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(color: Colors.grey, fontSize: 16),
-                      )
+                    ? Container()
                     : ListView.builder(
                         itemCount: laps.length,
                         itemBuilder: (context, index) {
@@ -261,7 +275,7 @@ class CounterAppState extends State<CounterApp> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
-                                  'Lap $lapNumber:',
+                                  'Lap $lapNumber.:',
                                   style: TextStyle(
                                     fontSize: 18,
                                     fontWeight: FontWeight.bold,
