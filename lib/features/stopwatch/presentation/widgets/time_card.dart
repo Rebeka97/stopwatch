@@ -23,7 +23,6 @@ class TimeCard extends StatelessWidget {
     final effectiveStyle = highlightChange
         ? displayStyle.copyWith(color: palette.highlightGreen)
         : displayStyle;
-
     return ConstrainedBox(
       constraints:
           const BoxConstraints(minWidth: StopwatchDimens.timeCardMinWidth),

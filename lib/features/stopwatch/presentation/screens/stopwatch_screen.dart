@@ -190,7 +190,6 @@ class _StopwatchScreenState extends State<StopwatchScreen> {
   }
 }
 
-/// A fő óralap: cím-pirula, MIN/SEC/MSEC kijelzők és a vezérlőgombok.
 class _StopwatchFrame extends StatelessWidget {
   final AppThemePalette palette;
   final TextStyle cardTextStyle;

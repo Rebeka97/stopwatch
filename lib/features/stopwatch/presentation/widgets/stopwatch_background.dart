@@ -2,8 +2,6 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import '../../../../core/theme/app_theme.dart';
 
-/// A képernyő teljes hátterét rajzolja: gradienst vagy témaképet, illetve
-/// (ha a paletta kéri) egy elmosó [BackdropFilter]-t a kép fölé.
 class StopwatchBackground extends StatelessWidget {
   final AppThemePalette palette;
 

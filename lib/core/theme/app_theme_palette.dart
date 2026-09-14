@@ -1,12 +1,6 @@
 import 'package:flutter/material.dart';
 import 'app_theme_type.dart';
 
-/// Egy téma összes vizuális tulajdonságát leíró, immutable adatosztály.
-///
-/// Az egyes témák (lásd lentebb a static const mezőket) csak adatokat
-/// definiálnak; a UI réteg sosem tartalmaz témánkénti hardcode-olt
-/// elágazást (switch/if a téma típusára), hanem mindig a paletta
-/// megfelelő mezőjét olvassa ki.
 class AppThemePalette {
   final LinearGradient backgroundGradient;
   final Color cardColor;
@@ -19,10 +13,8 @@ class AppThemePalette {
   final Color? frameColor;
   final bool showFrameBorder;
 
-  /// Az óra számjegyeinek betűtípusa; null esetén az alapértelmezett marad.
   final String? numberFontFamily;
 
-  /// Az óra számjegyeinek egyedi színe; null esetén [textWhite] érvényes.
   final Color? numberColorOverride;
 
   const AppThemePalette({
@@ -42,7 +34,6 @@ class AppThemePalette {
 
   Color get bgSolid => backgroundGradient.colors.first;
 
-  /// Az óra számjegyeinek ténylegesen alkalmazandó színe.
   Color get numberColor => numberColorOverride ?? textWhite;
 
   // 1. Pink

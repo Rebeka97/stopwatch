@@ -3,8 +3,6 @@ import '../../../../core/theme/app_theme.dart';
 import '../../../../core/theme/button_styles.dart';
 import '../../../../core/theme/dimens.dart';
 
-/// A START / PAUSE / RESET gombsor és a LAP gomb; a hívó fél csak a
-/// callback-eket és a palettát adja át, semmilyen stílust nem kell ismernie.
 class StopwatchControls extends StatelessWidget {
   final AppThemePalette palette;
   final VoidCallback onStart;

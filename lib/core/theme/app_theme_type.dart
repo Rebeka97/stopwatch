@@ -1,4 +1,3 @@
-/// Az alkalmazásban elérhető vizuális témák.
 enum AppThemeType {
   pink,
   blackAndWhite,

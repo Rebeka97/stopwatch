@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../../core/theme/app_theme.dart';
 
-/// A megjelenő téma nevét és egy legördülő listát mutató gomb az AppBar-ban,
-/// amivel a felhasználó közvetlenül kiválaszthatja a kívánt témát.
 class ThemeSwitcherMenu extends StatelessWidget {
   final AppThemeType currentTheme;
   final AppThemePalette palette;
@@ -22,7 +20,6 @@ class ThemeSwitcherMenu extends StatelessWidget {
       onSelected: onThemeSelected,
       color: palette.cardColor.withValues(alpha: 0.95),
       itemBuilder: (context) {
-        // sötét legördülő háttéren világos, világoson sötét szöveg olvashatóan
         final menuTextColor =
             ThemeData.estimateBrightnessForColor(palette.cardColor) ==
                     Brightness.dark
