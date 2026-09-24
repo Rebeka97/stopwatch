@@ -20,7 +20,6 @@ class MechanicalPushers extends StatelessWidget {
   }
 
   Widget _buildPusher({required double height}) {
-    // a keret üveges színét használjuk, ha van, hogy ne a világosabb kártyaszínbe olvadjon
     final pusherColor = palette.frameColor ?? palette.cardColor;
     return Container(
       width: StopwatchDimens.pusherWidth,

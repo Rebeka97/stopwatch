@@ -23,9 +23,12 @@ class StopwatchControls extends StatelessWidget {
   Widget build(BuildContext context) {
     final buttonTextStyle =
         TextStyle(color: palette.textWhite, fontWeight: FontWeight.bold);
-    final buttonStyle = softButtonStyle(palette.cardColor, palette.textWhite);
+    final isHome = identical(palette, AppThemePalette.home);
+    final buttonStyle = isHome
+        ? transparentButtonStyle(palette.textWhite)
+        : softButtonStyle(palette.cardColor, palette.textWhite);
 
-    return Column(
+    final controls = Column(
       children: [
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -58,5 +61,7 @@ class StopwatchControls extends StatelessWidget {
         ),
       ],
     );
+
+    return controls;
   }
 }

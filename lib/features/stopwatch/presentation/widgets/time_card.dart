@@ -23,17 +23,20 @@ class TimeCard extends StatelessWidget {
     final effectiveStyle = highlightChange
         ? displayStyle.copyWith(color: palette.highlightGreen)
         : displayStyle;
+    final isHome = identical(palette, AppThemePalette.home);
     return ConstrainedBox(
       constraints:
           const BoxConstraints(minWidth: StopwatchDimens.timeCardMinWidth),
       child: Container(
         margin: const EdgeInsets.symmetric(horizontal: 5.0),
         padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 12.0),
-        decoration: BoxDecoration(
-          color: palette.cardColor.withValues(alpha: 0.8),
-          borderRadius:
-              BorderRadius.circular(StopwatchDimens.timeCardBorderRadius),
-        ),
+        decoration: isHome
+            ? null
+            : BoxDecoration(
+                color: palette.cardColor.withValues(alpha: 0.8),
+                borderRadius:
+                    BorderRadius.circular(StopwatchDimens.timeCardBorderRadius),
+              ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [

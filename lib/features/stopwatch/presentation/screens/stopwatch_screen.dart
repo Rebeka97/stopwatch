@@ -146,7 +146,9 @@ class _StopwatchScreenState extends State<StopwatchScreen> {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           SizedBox(
-                            width: StopwatchDimens.frameWidth,
+                            width: identical(palette, AppThemePalette.home)
+                                ? (StopwatchDimens.frameWidth + 4) * 1.1
+                                : StopwatchDimens.frameWidth,
                             child: Stack(
                               clipBehavior: Clip.none,
                               children: [
@@ -162,11 +164,12 @@ class _StopwatchScreenState extends State<StopwatchScreen> {
                                   onReset: reset,
                                   onLap: lap,
                                 ),
-                                Positioned(
-                                  right: StopwatchDimens.pusherOffsetRight,
-                                  top: StopwatchDimens.pusherTopOffset,
-                                  child: MechanicalPushers(palette: palette),
-                                ),
+                                if (!identical(palette, AppThemePalette.home))
+                                  Positioned(
+                                    right: StopwatchDimens.pusherOffsetRight,
+                                    top: StopwatchDimens.pusherTopOffset,
+                                    child: MechanicalPushers(palette: palette),
+                                  ),
                               ],
                             ),
                           ),
@@ -217,34 +220,66 @@ class _StopwatchFrame extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isMermaid = identical(palette, AppThemePalette.mermaid);
+    final isHome = identical(palette, AppThemePalette.home);
+
     return Container(
-      width: StopwatchDimens.frameWidth,
-      padding: const EdgeInsets.symmetric(
-        vertical: StopwatchDimens.framePaddingVertical,
-        horizontal: StopwatchDimens.framePaddingHorizontal,
+      width: isHome
+          ? (StopwatchDimens.frameWidth + 40) * 1.2
+          : StopwatchDimens.frameWidth,
+      padding: EdgeInsets.symmetric(
+        vertical: StopwatchDimens.framePaddingVertical + (isHome ? 10 : 0),
+        horizontal: StopwatchDimens.framePaddingHorizontal + (isHome ? 10 : 0),
       ),
-      decoration: BoxDecoration(
-        color: palette.frameColor ?? palette.cardColor.withValues(alpha: 0.35),
-        borderRadius: BorderRadius.circular(StopwatchDimens.frameBorderRadius),
-        border: Border.all(
-          color: palette.showFrameBorder
-              ? palette.textWhite
-                  .withValues(alpha: palette.isGlass ? 0.55 : 0.35)
-              : Colors.transparent,
-          width: StopwatchDimens.frameBorderWidth,
-        ),
-      ),
+      decoration: isMermaid
+          ? BoxDecoration(
+              color: Colors.white.withValues(alpha: 0.08),
+              borderRadius: BorderRadius.circular(28),
+              border: Border.all(
+                color: Colors.white.withValues(alpha: 0.4),
+                width: 1.5,
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.2),
+                  blurRadius: 15,
+                  spreadRadius: 2,
+                ),
+              ],
+            )
+          : isHome && palette.frameImagePath != null
+              ? BoxDecoration(
+                  image: DecorationImage(
+                    image: AssetImage(palette.frameImagePath!),
+                    fit: BoxFit.cover,
+                  ),
+                )
+              : BoxDecoration(
+                  color: palette.frameColor ??
+                      palette.cardColor.withValues(alpha: 0.35),
+                  borderRadius:
+                      BorderRadius.circular(StopwatchDimens.frameBorderRadius),
+                  border: Border.all(
+                    color: palette.showFrameBorder
+                        ? palette.textWhite
+                            .withValues(alpha: palette.isGlass ? 0.55 : 0.35)
+                        : Colors.transparent,
+                    width: StopwatchDimens.frameBorderWidth,
+                  ),
+                ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           Container(
             width: StopwatchDimens.titlePillWidth,
             height: StopwatchDimens.titlePillHeight,
-            decoration: BoxDecoration(
-              color: palette.cardColor.withValues(alpha: 0.8),
-              borderRadius:
-                  BorderRadius.circular(StopwatchDimens.titlePillBorderRadius),
-            ),
+            decoration: isHome
+                ? null
+                : BoxDecoration(
+                    color: palette.cardColor.withValues(alpha: 0.8),
+                    borderRadius: BorderRadius.circular(
+                        StopwatchDimens.titlePillBorderRadius),
+                  ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
@@ -270,6 +305,7 @@ class _StopwatchFrame extends StatelessWidget {
                 highlightChange: highlightChange,
                 palette: palette,
               ),
+              if (isHome) _TimeSeparator(style: cardTextStyle),
               TimeCard(
                 timeValue: seconds.toString().padLeft(2, '0'),
                 label: 'SEC',
@@ -277,6 +313,7 @@ class _StopwatchFrame extends StatelessWidget {
                 highlightChange: highlightChange,
                 palette: palette,
               ),
+              if (isHome) _TimeSeparator(style: cardTextStyle),
               TimeCard(
                 timeValue: milliseconds.toString().padLeft(2, '0'),
                 label: 'MSEC',
@@ -296,6 +333,27 @@ class _StopwatchFrame extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+class _TimeSeparator extends StatelessWidget {
+  final TextStyle style;
+
+  const _TimeSeparator({required this.style});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text(':', style: style),
+        const SizedBox(height: 4),
+        const Opacity(
+          opacity: 0,
+          child: Text('.', style: TextStyle(fontSize: 10)),
+        ),
+      ],
     );
   }
 }

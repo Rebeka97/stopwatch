@@ -13,6 +13,7 @@ dependencies:
     sdk: flutter
 
   cupertino_icons: ^1.0.8
+  cupertino_native: ^0.1.1
 
 dev_dependencies:
   flutter_test:
@@ -28,6 +29,7 @@ flutter:
     - assets/galaxy.jpeg
     - assets/mermaid.jpg
     - assets/home.jpg
+    - assets/glass_bg.png
   fonts:
     - family: FragileBombers
       fonts:

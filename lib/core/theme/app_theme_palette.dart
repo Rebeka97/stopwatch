@@ -12,6 +12,7 @@ class AppThemePalette {
   final bool blurBackground;
   final Color? frameColor;
   final bool showFrameBorder;
+  final String? frameImagePath;
 
   final String? numberFontFamily;
 
@@ -30,6 +31,7 @@ class AppThemePalette {
     this.showFrameBorder = true,
     this.numberFontFamily,
     this.numberColorOverride,
+    this.frameImagePath,
   });
 
   Color get bgSolid => backgroundGradient.colors.first;
@@ -153,6 +155,7 @@ class AppThemePalette {
     highlightGreen: Color(0xFF00B5D8),
     latestLap: Color(0xFF805AD5),
     backgroundImagePath: 'assets/home.jpg',
+    frameImagePath: 'assets/glass_bg.png',
   );
 
   static const Map<AppThemeType, AppThemePalette> _palettes = {
