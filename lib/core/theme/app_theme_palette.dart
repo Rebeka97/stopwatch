@@ -105,11 +105,7 @@ class AppThemePalette {
   static const mermaid = AppThemePalette(
     isGlass: true,
     backgroundGradient: LinearGradient(
-      colors: [
-        Color(0xFFFCE6F4),
-        Color(0xFFE2E6FF),
-        Color(0xFFD3F7EE),
-      ],
+      colors: [Color(0xFFFCE6F4), Color(0xFFE2E6FF), Color(0xFFD3F7EE)],
       begin: Alignment.topLeft,
       end: Alignment.bottomRight,
     ),
@@ -121,6 +117,7 @@ class AppThemePalette {
     blurBackground: true,
     showFrameBorder: false,
     numberFontFamily: 'HistoryOfWawa',
+    frameImagePath: 'assets/glass_bg_bg.png',
     numberColorOverride: Color.fromARGB(255, 250, 176, 208),
   );
 
