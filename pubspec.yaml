@@ -30,6 +30,7 @@ flutter:
     - assets/mermaid.jpg
     - assets/home.jpg
     - assets/glass_bg.png
+    - assets/glass_bg_bg.png
   fonts:
     - family: FragileBombers
       fonts:

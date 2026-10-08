@@ -20,11 +20,11 @@ class StopwatchScreen extends StatefulWidget {
 }
 
 class _StopwatchScreenState extends State<StopwatchScreen> {
-  static const _tickInterval = Duration(milliseconds: 10);
+  static const _tickInterval = Duration(milliseconds: 16);
   static const _highlightIntervalMinutes = 10;
 
   int milisec = 0;
-  int counter = 0;
+  int seconds = 0;
   int minutes = 0;
   Timer? timer;
 
@@ -34,7 +34,7 @@ class _StopwatchScreenState extends State<StopwatchScreen> {
   final List<String> laps = [];
 
   String get formattedTime =>
-      '${minutes.toString().padLeft(2, '0')} : ${counter.toString().padLeft(2, '0')} : ${milisec.toString().padLeft(2, '0')}';
+      '${minutes.toString().padLeft(2, '0')} : ${seconds.toString().padLeft(2, '0')} : ${milisec.toString().padLeft(3, '0')}';
 
   void increment() {
     if (isRunning) return;
@@ -47,14 +47,14 @@ class _StopwatchScreenState extends State<StopwatchScreen> {
           highlightChange = false;
         }
 
-        milisec++;
+        milisec += _tickInterval.inMilliseconds;
 
-        if (milisec == 100) {
-          milisec = 0;
-          counter++;
+        if (milisec >= 1000) {
+          milisec = milisec % 1000;
+          seconds++;
 
-          if (counter == 60) {
-            counter = 0;
+          if (seconds == 60) {
+            seconds = 0;
             minutes++;
           }
         }
@@ -75,7 +75,7 @@ class _StopwatchScreenState extends State<StopwatchScreen> {
   void reset() {
     setState(() {
       milisec = 0;
-      counter = 0;
+      seconds = 0;
       minutes = 0;
       timer?.cancel();
       isRunning = false;
@@ -87,7 +87,10 @@ class _StopwatchScreenState extends State<StopwatchScreen> {
   void lap() {
     if (!isRunning) return;
     setState(() {
-      laps.insert(0, formattedTime);
+      laps.insert(
+        0,
+        '${minutes.toString().padLeft(2, '0')} : ${seconds.toString().padLeft(2, '0')} : ${milisec.toString().padLeft(3, '0')}',
+      );
     });
   }
 
@@ -109,12 +112,19 @@ class _StopwatchScreenState extends State<StopwatchScreen> {
       listenable: widget.themeController,
       builder: (context, _) {
         final palette = widget.themeController.palette;
+        final isHome = identical(palette, AppThemePalette.home);
+        final hasImageFrame =
+            isHome || identical(palette, AppThemePalette.mermaid);
+        final frameWidth = isHome
+            ? StopwatchDimens.frameWidth
+            : StopwatchDimens.compactFrameWidth;
 
         final cardTextStyle = TextStyle(
           fontSize: StopwatchDimens.timeCardFontSize,
           fontWeight: FontWeight.bold,
           color: palette.numberColor,
           fontFamily: palette.numberFontFamily,
+          fontFeatures: [const FontFeature.tabularFigures()],
         );
 
         return Scaffold(
@@ -123,6 +133,8 @@ class _StopwatchScreenState extends State<StopwatchScreen> {
           appBar: AppBar(
             backgroundColor: Colors.transparent,
             elevation: 0,
+            scrolledUnderElevation: 0,
+            surfaceTintColor: Colors.transparent,
             iconTheme: IconThemeData(color: palette.textWhite),
             actions: [
               ThemeSwitcherMenu(
@@ -137,50 +149,50 @@ class _StopwatchScreenState extends State<StopwatchScreen> {
             children: [
               StopwatchBackground(palette: palette),
               SafeArea(
-                child: SingleChildScrollView(
-                  child: Center(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 16.0, vertical: 10.0),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          SizedBox(
-                            width: identical(palette, AppThemePalette.home)
-                                ? (StopwatchDimens.frameWidth + 4) * 1.1
-                                : StopwatchDimens.frameWidth,
-                            child: Stack(
-                              clipBehavior: Clip.none,
-                              children: [
-                                _StopwatchFrame(
-                                  palette: palette,
-                                  cardTextStyle: cardTextStyle,
-                                  minutes: minutes,
-                                  seconds: counter,
-                                  milliseconds: milisec,
-                                  highlightChange: highlightChange,
-                                  onStart: increment,
-                                  onPause: pause,
-                                  onReset: reset,
-                                  onLap: lap,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16.0,
+                    vertical: 10.0,
+                  ),
+                  child: SizedBox(
+                    width: double.infinity,
+                    child: Column(
+                      children: [
+                        SizedBox(
+                          width: isHome ? (frameWidth + 4) * 1.1 : frameWidth,
+                          child: Stack(
+                            clipBehavior: Clip.none,
+                            children: [
+                              _StopwatchFrame(
+                                palette: palette,
+                                cardTextStyle: cardTextStyle,
+                                minutes: minutes,
+                                seconds: seconds,
+                                milliseconds: milisec,
+                                highlightChange: highlightChange,
+                                onStart: increment,
+                                onPause: pause,
+                                onReset: reset,
+                                onLap: lap,
+                              ),
+                              if (!hasImageFrame)
+                                Positioned(
+                                  right: StopwatchDimens.pusherOffsetRight,
+                                  top: StopwatchDimens.pusherTopOffset,
+                                  child: MechanicalPushers(palette: palette),
                                 ),
-                                if (!identical(palette, AppThemePalette.home))
-                                  Positioned(
-                                    right: StopwatchDimens.pusherOffsetRight,
-                                    top: StopwatchDimens.pusherTopOffset,
-                                    child: MechanicalPushers(palette: palette),
-                                  ),
-                              ],
-                            ),
+                            ],
                           ),
-                          const SizedBox(height: StopwatchDimens.spacingLarge),
-                          LapsList(
+                        ),
+                        const SizedBox(height: StopwatchDimens.spacingLarge),
+                        Expanded(
+                          child: LapsList(
                             laps: laps,
                             onDeleteLaps: deleteLaps,
                             palette: palette,
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                   ),
                 ),
@@ -220,82 +232,113 @@ class _StopwatchFrame extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isMermaid = identical(palette, AppThemePalette.mermaid);
     final isHome = identical(palette, AppThemePalette.home);
+    final isMermaid = identical(palette, AppThemePalette.mermaid);
+    final hasImageFrame = isHome || isMermaid;
+    final frameWidth = isHome
+        ? StopwatchDimens.frameWidth
+        : StopwatchDimens.compactFrameWidth;
+
+    final content = _buildContent(isHome, hasImageFrame);
+
+    if (isMermaid && palette.frameImagePath != null) {
+      // A kép a tartalom mögött túlnyúlik, így a keret layout-mérete
+      // megegyezik a többi témáéval, és a laps ugyanott kezdődik.
+      final imageSize = frameWidth * 1.3;
+      return Stack(
+        clipBehavior: Clip.none,
+        children: [
+          Positioned.fill(
+            child: OverflowBox(
+              maxWidth: imageSize,
+              maxHeight: imageSize,
+              child: Image.asset(
+                palette.frameImagePath!,
+                width: imageSize,
+                height: imageSize,
+                fit: BoxFit.contain,
+              ),
+            ),
+          ),
+          Container(
+            width: frameWidth,
+            padding: const EdgeInsets.symmetric(
+              vertical: StopwatchDimens.framePaddingVertical,
+              horizontal: StopwatchDimens.framePaddingHorizontal,
+            ),
+            child: content,
+          ),
+        ],
+      );
+    }
 
     return Container(
-      width: isHome
-          ? (StopwatchDimens.frameWidth + 40) * 1.2
-          : StopwatchDimens.frameWidth,
+      width: frameWidth,
       padding: EdgeInsets.symmetric(
         vertical: StopwatchDimens.framePaddingVertical + (isHome ? 10 : 0),
         horizontal: StopwatchDimens.framePaddingHorizontal + (isHome ? 10 : 0),
       ),
-      decoration: isMermaid
+      decoration: isHome && palette.frameImagePath != null
           ? BoxDecoration(
-              color: Colors.white.withValues(alpha: 0.08),
-              borderRadius: BorderRadius.circular(28),
-              border: Border.all(
-                color: Colors.white.withValues(alpha: 0.4),
-                width: 1.5,
+              image: DecorationImage(
+                image: AssetImage(palette.frameImagePath!),
+                fit: BoxFit.cover,
               ),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.2),
-                  blurRadius: 15,
-                  spreadRadius: 2,
-                ),
-              ],
             )
-          : isHome && palette.frameImagePath != null
-              ? BoxDecoration(
-                  image: DecorationImage(
-                    image: AssetImage(palette.frameImagePath!),
-                    fit: BoxFit.cover,
-                  ),
-                )
-              : BoxDecoration(
-                  color: palette.frameColor ??
-                      palette.cardColor.withValues(alpha: 0.35),
-                  borderRadius:
-                      BorderRadius.circular(StopwatchDimens.frameBorderRadius),
-                  border: Border.all(
-                    color: palette.showFrameBorder
-                        ? palette.textWhite
-                            .withValues(alpha: palette.isGlass ? 0.55 : 0.35)
-                        : Colors.transparent,
-                    width: StopwatchDimens.frameBorderWidth,
-                  ),
-                ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(
-            width: StopwatchDimens.titlePillWidth,
-            height: StopwatchDimens.titlePillHeight,
-            decoration: isHome
-                ? null
-                : BoxDecoration(
-                    color: palette.cardColor.withValues(alpha: 0.8),
-                    borderRadius: BorderRadius.circular(
-                        StopwatchDimens.titlePillBorderRadius),
-                  ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Text(
-                  'Stopwatch',
-                  style: TextStyle(
-                    color: palette.textWhite,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 12,
-                  ),
-                ),
-              ],
+          : BoxDecoration(
+              color:
+                  palette.frameColor ??
+                  palette.cardColor.withValues(alpha: 0.35),
+              borderRadius: BorderRadius.circular(
+                StopwatchDimens.frameBorderRadius,
+              ),
+              border: Border.all(
+                color: palette.showFrameBorder
+                    ? palette.textWhite.withValues(
+                        alpha: palette.isGlass ? 0.55 : 0.35,
+                      )
+                    : Colors.transparent,
+                width: StopwatchDimens.frameBorderWidth,
+              ),
             ),
+
+      child: content,
+    );
+  }
+
+  Widget _buildContent(bool isHome, bool hasImageFrame) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Container(
+          width: StopwatchDimens.titlePillWidth,
+          height: StopwatchDimens.titlePillHeight,
+          decoration: hasImageFrame
+              ? null
+              : BoxDecoration(
+                  color: palette.cardColor.withValues(alpha: 0.8),
+                  borderRadius: BorderRadius.circular(
+                    StopwatchDimens.titlePillBorderRadius,
+                  ),
+                ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Text(
+                'Stopwatch',
+                style: TextStyle(
+                  color: palette.textWhite,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 12,
+                ),
+              ),
+            ],
           ),
-          const SizedBox(height: StopwatchDimens.spacingXLarge),
-          Row(
+        ),
+        const SizedBox(height: StopwatchDimens.spacingXLarge),
+        FittedBox(
+          fit: BoxFit.scaleDown,
+          child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               TimeCard(
@@ -315,7 +358,7 @@ class _StopwatchFrame extends StatelessWidget {
               ),
               if (isHome) _TimeSeparator(style: cardTextStyle),
               TimeCard(
-                timeValue: milliseconds.toString().padLeft(2, '0'),
+                timeValue: milliseconds.toString().padLeft(3, '0'),
                 label: 'MSEC',
                 displayStyle: cardTextStyle,
                 highlightChange: highlightChange,
@@ -323,16 +366,16 @@ class _StopwatchFrame extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: StopwatchDimens.spacingXLarge),
-          StopwatchControls(
-            palette: palette,
-            onStart: onStart,
-            onPause: onPause,
-            onReset: onReset,
-            onLap: onLap,
-          ),
-        ],
-      ),
+        ),
+        const SizedBox(height: StopwatchDimens.spacingXLarge),
+        StopwatchControls(
+          palette: palette,
+          onStart: onStart,
+          onPause: onPause,
+          onReset: onReset,
+          onLap: onLap,
+        ),
+      ],
     );
   }
 }

@@ -1,7 +1,8 @@
 class StopwatchDimens {
   StopwatchDimens._();
 
-  static const double frameWidth = 320;
+  static const double frameWidth = 360;
+  static const double compactFrameWidth = 320;
   static const double frameBorderRadius = 24;
   static const double frameBorderWidth = 1.5;
   static const double framePaddingVertical = 20;
@@ -11,7 +12,7 @@ class StopwatchDimens {
   static const double titlePillHeight = 38;
   static const double titlePillBorderRadius = 20;
 
-  static const double timeCardMinWidth = 70;
+  static const double timeCardMinWidth = 84;
   static const double timeCardBorderRadius = 14;
   static const double timeCardFontSize = 34;
 
